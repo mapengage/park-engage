@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import "leaflet/dist/leaflet.css";
+import locations from "~/data/locations.json"; // Import the JSON file
 
 export default function Index() {
   const [MapComponents, setMapComponents] = useState<any>(null);
@@ -24,9 +25,9 @@ export default function Index() {
   const { MapContainer, TileLayer, Marker, Popup } = MapComponents;
 
   return (
-    <div style={{ display: "flex", flexDirection: "column", height: "100vh" }}>
+    <div style={{ position: "relative", height: "100vh", width: "100vw" }}>
       {/* Map Section */}
-      <div style={{ flex: 1 }}>
+      <div style={{ height: "100%", width: "100%" }}>
         <MapContainer
           center={[35.3075, -80.7351]} // Coordinates for UNCC campus
           zoom={15}
@@ -36,23 +37,38 @@ export default function Index() {
             url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
             attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
           />
-          <Marker position={[35.3075, -80.7351]}>
-            <Popup>University of North Carolina at Charlotte</Popup>
-          </Marker>
+          {/* Add a Marker for each building */}
+          {locations.buildings.map((building, index) => (
+            <Marker
+              key={index}
+              position={[building.latitude, building.longitude]}
+            >
+              <Popup>{building.name}</Popup>
+            </Marker>
+          ))}
         </MapContainer>
       </div>
 
       {/* Footer Section */}
       <div
         style={{
+          position: "absolute", // Make the footer float over the map
+          bottom: "10px", // Position it 10px from the bottom
+          left: "50%", // Center it horizontally
+          transform: "translateX(-50%)", // Adjust for centering
           height: "50px",
+          width: "90%", // Make it smaller than the screen width
           backgroundColor: "rgba(0, 69, 37, 0.95)",
           display: "flex",
           alignItems: "center",
           justifyContent: "center",
-          borderTop: "1px solid #ddd",
-          borderColor: "rgb(129, 112, 50)",
-          borderWidth: "4px 1pxs 2px 1px",
+          borderColor: "rgba(129, 112, 50, 1.0)",
+          borderWidth: "2px",
+          borderStyle: "solid",
+          borderRadius: "10px", // Add rounded corners
+          boxSizing: "border-box",
+          color: "#fff", // Ensure text is readable
+          zIndex: 1000, // Ensure it appears above the map
         }}
       >
         <p style={{ margin: 0, fontSize: "16px" }}>Park Engage @ UNCC</p>
