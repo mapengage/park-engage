@@ -4,6 +4,8 @@ import locations from "~/data/locations.json"; // Import the JSON file
 
 export default function Index() {
   const [MapComponents, setMapComponents] = useState<any>(null);
+  const [selectedBuilding, setSelectedBuilding] = useState(null); // Track the selected building
+  const [isModalOpen, setIsModalOpen] = useState(false); // Track modal visibility
 
   useEffect(() => {
     // Dynamically import react-leaflet components on the client side
@@ -24,6 +26,15 @@ export default function Index() {
 
   const { MapContainer, TileLayer, Marker, Popup } = MapComponents;
 
+  const handleMarkerClick = (building: any) => {
+    setSelectedBuilding(building); // Set the selected building
+    setIsModalOpen(true); // Open the modal
+  };
+
+  const closeModal = () => {
+    setIsModalOpen(false); // Close the modal
+  };
+
   return (
     <div style={{ position: "relative", height: "100vh", width: "100vw" }}>
       {/* Map Section */}
@@ -42,6 +53,9 @@ export default function Index() {
             <Marker
               key={index}
               position={[building.latitude, building.longitude]}
+              eventHandlers={{
+                click: () => handleMarkerClick(building), // Handle marker click
+              }}
             >
               <Popup>{building.name}</Popup>
             </Marker>
@@ -49,29 +63,79 @@ export default function Index() {
         </MapContainer>
       </div>
 
-      {/* Footer Section */}
+      {/* Footer + Modal Section */}
       <div
         style={{
-          position: "absolute", // Make the footer float over the map
-          bottom: "10px", // Position it 10px from the bottom
-          left: "50%", // Center it horizontally
-          transform: "translateX(-50%)", // Adjust for centering
-          height: "50px",
-          width: "90%", // Make it smaller than the screen width
-          backgroundColor: "rgba(0, 69, 37, 0.95)",
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "center",
-          borderColor: "rgba(129, 112, 50, 1.0)",
-          borderWidth: "2px",
-          borderStyle: "solid",
-          borderRadius: "10px", // Add rounded corners
+          position: "absolute",
+          bottom: isModalOpen ? "10px" : "10px", // Always maintain a 10px gap from the bottom
+          left: "50%",
+          transform: "translateX(-50%)", // Center horizontally
+          height: isModalOpen ? "calc(100% - 20px)" : "50px", // Adjust height dynamically
+          width: "90%", // Leave some gap on the sides
+          backgroundColor: "white", // Modal background color
+          borderRadius: "10px", // Rounded corners
+          boxShadow: "0px -2px 10px rgba(0, 0, 0, 0.2)", // Add shadow for depth
+          zIndex: 1100, // Ensure it appears above the map
           boxSizing: "border-box",
-          color: "#fff", // Ensure text is readable
-          zIndex: 1000, // Ensure it appears above the map
+          overflowY: isModalOpen ? "auto" : "hidden", // Allow scrolling when modal is open
+          transition: "all 0.3s ease", // Smooth slide-up animation
+          border: "1px solid lightgray", // Border color
         }}
       >
-        <p style={{ margin: 0, fontSize: "16px" }}>Park Engage @ UNCC</p>
+        {/* Footer Section */}
+        <div
+          style={{
+            height: "50px",
+            backgroundColor: "rgba(0, 69, 37, 0.95)", // Footer background color
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center", // Center the footer text
+            borderColor: "rgba(129, 112, 50, 1.0)",
+            borderWidth: "2px",
+            borderStyle: "solid",
+            borderRadius: isModalOpen ? "10px 10px 0 0" : "10px", // Rounded corners
+            color: "#fff", // Ensure text is readable
+            boxSizing: "border-box",
+            padding: "0 10px", // Add padding for spacing
+            position: "relative", // Allow positioning of the close button
+          }}
+        >
+          <p style={{ margin: 0, fontSize: "16px" }}>Park Engage @ UNCC</p>
+          {isModalOpen && (
+            <button
+              onClick={closeModal}
+              style={{
+                position: "absolute",
+                top: "50%",
+                right: "10px",
+                transform: "translateY(-50%)", // Center vertically
+                background: "transparent",
+                border: "none",
+                color: "#fff", // White close button
+                fontSize: "20px",
+                fontFamily: "Helvetica, Roboto, Segoe UI, sans-serif", // Use a thinner font
+                cursor: "pointer",
+              }}
+            >
+               {"\u2716"}
+            </button>
+          )}
+        </div>
+
+        {/* Modal Content */}
+        {isModalOpen && (
+          <div
+            style={{
+              padding: "20px",
+              color: "#000", // Text color for modal content
+              overflowY: "auto", // Allow scrolling for modal content
+              borderRadius: "0 0 10px 10px", // Add 10px rounded corners to the bottom
+            }}
+          >
+            <h2>{selectedBuilding?.name}</h2>
+            <p>Sample text about the building goes here.</p>
+          </div>
+        )}
       </div>
     </div>
   );
