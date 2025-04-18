@@ -46,5 +46,4 @@ def parkData():
     return jsonify(data)
 
 if __name__ == '__main__':
-    print(getNowPercent("CD FS"))
     app.run(debug=True)
