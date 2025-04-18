@@ -1,0 +1,39 @@
+# Root-level ignores
+.env
+*.log
+*.pyc
+__pycache__/
+.DS_Store
+
+# Node/Remix Frontend
+/frontend/node_modules/
+/frontend/build/
+/frontend/dist/
+/frontend/.cache/
+/frontend/.env
+/frontend/.next/
+/frontend/.turbo/
+/frontend/.vercel/
+/frontend/.netlify/
+/frontend/public/build/
+
+# Python/Flask Backend
+/backend/__pycache__/
+/backend/instance/
+/backend/.env
+/backend/env/
+/backend/venv/
+/backend/.venv/
+/backend/*.pyc
+/backend/*.pyo
+/backend/*.pyd
+/backend/.mypy_cache/
+/backend/.pytest_cache/
+/backend/.coverage
+/backend/coverage.xml
+/backend/htmlcov/
+/backend/.vscode/
+
+# IDEs
+.vscode/
+.idea/
