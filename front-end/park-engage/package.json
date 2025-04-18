@@ -1,5 +1,11 @@
 {
   "name": "park-engage",
+  "version": "1.0.0",
+  "author": "Jonathan Dymond <codemusket@gmail.com>",
+  "description": "Front end for Park Enage App",
+  "contributors": [
+    "Varun Gadde <varungadde6@gmail.com> (role: UX Advisor)"
+  ],
   "private": true,
   "sideEffects": false,
   "type": "module",
