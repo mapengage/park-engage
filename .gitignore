@@ -6,16 +6,16 @@ __pycache__/
 .DS_Store
 
 # Node/Remix Frontend
-/frontend/node_modules/
-/frontend/build/
-/frontend/dist/
-/frontend/.cache/
-/frontend/.env
-/frontend/.next/
-/frontend/.turbo/
-/frontend/.vercel/
-/frontend/.netlify/
-/frontend/public/build/
+/front-end/node_modules/
+/front-end/build/
+/front-end/dist/
+/front-end/.cache/
+/front-end/.env
+/front-end/.next/
+/front-end/.turbo/
+/front-end/.vercel/
+/front-end/.netlify/
+/front-end/public/build/
 
 # Python/Flask Backend
 /backend/__pycache__/
