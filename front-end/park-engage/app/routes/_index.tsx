@@ -46,14 +46,16 @@ export default function Index() {
       <div
         style={{
           height: "50px",
-          backgroundColor: "#f8f9fa",
+          backgroundColor: "rgba(0, 69, 37, 0.95)",
           display: "flex",
           alignItems: "center",
           justifyContent: "center",
           borderTop: "1px solid #ddd",
+          borderColor: "rgb(129, 112, 50)",
+          borderWidth: "4px 1pxs 2px 1px",
         }}
       >
-        <p style={{ margin: 0, fontSize: "16px" }}>UNCC Campus Map</p>
+        <p style={{ margin: 0, fontSize: "16px" }}>Park Engage @ UNCC</p>
       </div>
     </div>
   );
