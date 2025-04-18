@@ -1,0 +1,1 @@
+web: concurrently "cd backend && python3 main.py" "cd front-end/park-engage && npm run dev"
