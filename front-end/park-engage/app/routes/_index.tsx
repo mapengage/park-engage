@@ -40,8 +40,8 @@ export default function Index() {
       {/* Map Section */}
       <div style={{ height: "100%", width: "100%" }}>
         <MapContainer
-          center={[35.3075, -80.7351]} // Coordinates for UNCC campus
-          zoom={15}
+          center={[35.3075, -80.7338]} // Coordinates for UNCC campus
+          zoom={16}
           style={{ width: "100%", height: "100%" }}
         >
           <TileLayer
