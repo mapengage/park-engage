@@ -4,7 +4,7 @@
 *.pyc
 __pycache__/
 .DS_Store
-
+tunnel.conf
 # Node/Remix Frontend
 /front-end/node_modules/
 /front-end/build/

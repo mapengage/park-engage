@@ -1,7 +1,18 @@
 from flask import Flask, jsonify, request
+from openai import OpenAI
+from flask_cors import CORS
 import requests
-
+import os
+import json
 app = Flask(__name__)
+CORS(app)
+def getWeatherData():
+    response = requests.get("https://cdn.weatherstem.com/dashboard/data/dynamic/model/mecklenburg/uncc/latest.json")
+    if response.status_code == 200:
+        data = response.json()
+        return data
+    else:
+        return {"data": "No data found. You may return 0 for the weather. "}
 
 def getNowPercent(code: str):
         """
@@ -20,12 +31,68 @@ def getNowPercent(code: str):
             for obj in data["data"]["parking"]:
                 if obj["lotCode"] == code:
                     return round(obj["percentAvailable"], 2) # Rounds to 2 decimal places
-                else:
-                    print(f"Lot code {code} not found in the data.")
-                    return 0
         else:
             return 0  # Return 0 if the request fails
+ 
+def askLLM(location:str, time):
+    prompt = ""
+    locations = {}
+    with open("prompt.txt", "r") as file:
+        prompt = file.read()
+    with open("locations.json", "r") as file:
+        locations = json.load(file)
+
+    studentClassBuilding = {}
+    for i in locations["buildings"]:
+        if location == i["name"]:
+            studentClassBuilding = i["name"]
+        
+        parkingLocations = locations["parking"]
     
+    availabilityForParkingGarage = {}
+
+    for i,v in enumerate(locations["parking"]):
+        availabilityForParkingGarage[i] = {
+            "name": v["name"],
+            "filledPercent": 1 - getNowPercent(v["name"])
+        }
+    print(availabilityForParkingGarage)
+
+    prompt = prompt + f" Here are all the locations of the parking garages. {parkingLocations} . Here are how full they are {availabilityForParkingGarage}. The number represents the decimal place of how much they are full. The percentage out of 100 is the number in here * 100. Make sure to mention this number in the reasons. Now, here is the location of the student's class. Remember that this is latitude and longitude and these distances seem small but are very large. {studentClassBuilding}. Here is the weather data. {getWeatherData()}. Here is the time: {time}"
+    print(prompt)
+    client = OpenAI(
+        api_key=os.environ.get("OPENAI_API_KEY")
+    )
+
+    while not client:
+        pass
+    # Wait until the client is ready
+    completion = client.chat.completions.create(
+        model="gpt-4o-mini",
+        response_format={"type": "json_object" },
+        store=True,
+        messages=[
+            {"role": "user", "content": prompt}
+        ]
+    )
+
+    response_content = completion.choices[0].message.content.strip()
+    print(response_content)
+    try:
+        # Attempt to parse the response content into a Python object (dictionary)
+        response_data = json.loads(response_content)
+    except json.JSONDecodeError:
+        # If the response is not valid JSON, attempt to clean it up and parse again
+        try:
+            response_content = response_content.replace("'", "\"")  # Replace single quotes with double quotes
+            response_data = json.loads(response_content)
+        except json.JSONDecodeError:
+            # If it still fails, return an error message
+            response_data = {"error": "Invalid JSON response from LLM"}
+
+    response_data["percentFilled"] = round((1 - getNowPercent(response_data["garage"])), 2)
+    return response_data
+
 @app.route('/api/test', methods=["GET"])
 def testData():
     data = {"garage": "North Deck",
@@ -34,16 +101,31 @@ def testData():
 
     return jsonify(data)
 
-@app.route('/api/park', methods=['GET'])
+@app.route('/api/park', methods=['POST'])
 def parkData():
     location = request.json["location"]
     time = request.json["time"]
-    nowPercent = getNowPercent(location)
-    data = {"garage": "currently not implemented",
-            "nowPercent": nowPercent,
-            "estimatedParkingTime": 0}
+    llmResponse = askLLM(location,time)
+    
+    namesToReadableNames = {
+        "CD VS": "Cone Deck",
+        "CRI": "CRI Deck",
+        "ED1": "East Deck 1",
+        "ED2/3": "East Deck 2/3",
+        "NORTH": "North Deck",
+        "SOUTH": "South Deck",
+        "UDL": "Union Deck Lower",
+        "UDU": "Union Deck Upper",
+        "WEST": "West Deck"
+    }
+    
+    llmResponse["readableName"] = namesToReadableNames[llmResponse["garage"]]
 
-    return jsonify(data)
+    return jsonify(llmResponse)
+
+    
+
+
 
 if __name__ == '__main__':
-    app.run(debug=True)
+    app.run(host='0.0.0.0',port=5000,debug=True)
