@@ -4,8 +4,25 @@ from flask_cors import CORS
 import requests
 import os
 import json
+import haversine
+import openrouteservice
 app = Flask(__name__)
 CORS(app)
+
+api_key = os.environ.get("OPENROUTESERVICE_API_KEY")
+client = openrouteservice.Client(key=api_key)
+
+def getDistance(c1:list,c2:list):
+    
+
+    # Coordinates are in [longitude, latitude] format!
+    start_coords = (float(c1[0]), float(c1[1])) 
+    end_coords   = (float(c2[0]), float(c2[1])) 
+    return haversine.haversine(start_coords, end_coords, unit=haversine.Unit.MILES)
+
+
+    
+
 def getWeatherData():
     response = requests.get("https://cdn.weatherstem.com/dashboard/data/dynamic/model/mecklenburg/uncc/latest.json")
     if response.status_code == 200:
@@ -45,20 +62,29 @@ def askLLM(location:str, time):
     studentClassBuilding = {}
     for i in locations["buildings"]:
         if location == i["name"]:
-            studentClassBuilding = i["name"]
+            studentClassBuilding = i
         
         parkingLocations = locations["parking"]
     
     availabilityForParkingGarage = {}
-
+    timeToWalk = {}
+    lat = studentClassBuilding["latitude"]
+    long = studentClassBuilding["longitude"]
     for i,v in enumerate(locations["parking"]):
         availabilityForParkingGarage[i] = {
             "name": v["name"],
             "filledPercent": 1 - getNowPercent(v["name"])
         }
-    print(availabilityForParkingGarage)
+        timeToWalk[v["name"]] = getDistance([v["latitude"], v["longitude"]], [lat, long])
+        print(timeToWalk)
 
-    prompt = prompt + f" Here are all the locations of the parking garages. {parkingLocations} . Here are how full they are {availabilityForParkingGarage}. The number represents the decimal place of how much they are full. The percentage out of 100 is the number in here * 100. Make sure to mention this number in the reasons. Now, here is the location of the student's class. Remember that this is latitude and longitude and these distances seem small but are very large. {studentClassBuilding}. Here is the weather data. {getWeatherData()}. Here is the time: {time}"
+    prompt = prompt + f""" Here are all the locations of the parking garages. {parkingLocations} . Here are how full they are {availabilityForParkingGarage}.
+                     The number represents the decimal place of how much they are full.
+                     The percentage out of 100 is the number in here * 100. 
+                     Make sure to mention this number in the reasons. 
+                     The name of the building where the student's class is located is {location}
+                     Here is the distance in miles to the parking garage from the class. try to minimize. THIS IS VERY IMPORTANT. {timeToWalk}
+                     Here is the weather data. {getWeatherData()}. Here is the time: {time}"""
     print(prompt)
     client = OpenAI(
         api_key=os.environ.get("OPENAI_API_KEY")
