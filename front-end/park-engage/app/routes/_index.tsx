@@ -6,6 +6,7 @@ export default function Index() {
   const [MapComponents, setMapComponents] = useState<any>(null);
   const [selectedBuilding, setSelectedBuilding] = useState(null); // Track the selected building
   const [isModalOpen, setIsModalOpen] = useState(false); // Track modal visibility
+  const [parkingData, setParkingData] = useState(null); // Track parking data
 
   useEffect(() => {
     // Dynamically import react-leaflet components on the client side
@@ -26,9 +27,35 @@ export default function Index() {
 
   const { MapContainer, TileLayer, Marker, Popup } = MapComponents;
 
-  const handleMarkerClick = (building: any) => {
+  const handleMarkerClick = async (building: any) => {
     setSelectedBuilding(building); // Set the selected building
     setIsModalOpen(true); // Open the modal
+
+    // Create the JSON block to send to the server
+    const requestData = {
+      location: building.name, // Use the building's name as the location
+      time: new Date().toISOString(), // Use the current time in ISO format
+    };
+
+    // Make a REST call to fetch parking data
+    try {
+        const response = await fetch(window.SERVER_ENDPOINT, {
+        method: "POST", // Use POST to send data
+        headers: {
+          "Content-Type": "application/json", // Specify JSON content type
+        },
+        body: JSON.stringify(requestData), // Send the JSON block
+      });
+
+      const data = await response.json();
+
+      console.log("DATA", data); // Log the fetched data
+
+      setParkingData(data); // Store the parking data
+    } catch (error) {
+      console.log(error.message);
+      console.error("Error fetching parking data:", error);
+    }
   };
 
   const closeModal = () => {
@@ -137,7 +164,12 @@ export default function Index() {
             }}
           >
             <h2>{selectedBuilding?.name}</h2>
-            <p>Sample text about the building goes here.</p>
+            {parkingData && (
+              <div>
+                <h3>Parking Data:</h3>
+                <pre>{JSON.stringify(parkingData, null, 2)}</pre>
+              </div>
+            )}
           </div>
         )}
       </div>
