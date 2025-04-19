@@ -20,9 +20,6 @@ def getDistance(c1:list,c2:list):
     end_coords   = (float(c2[0]), float(c2[1])) 
     return haversine.haversine(start_coords, end_coords, unit=haversine.Unit.MILES)
 
-
-    
-
 def getWeatherData():
     response = requests.get("https://cdn.weatherstem.com/dashboard/data/dynamic/model/mecklenburg/uncc/latest.json")
     if response.status_code == 200:
@@ -146,7 +143,7 @@ def parkData():
     }
     
     llmResponse["readableName"] = namesToReadableNames[llmResponse["garage"]]
-
+    llmResponse["percentEstimated"] = 0.5
     return jsonify(llmResponse)
 
     
