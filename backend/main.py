@@ -5,7 +5,6 @@ import requests
 import os
 import json
 import haversine
-import openrouteservice
 app = Flask(__name__)
 CORS(app)
 
