@@ -8,9 +8,6 @@ import haversine
 app = Flask(__name__)
 CORS(app)
 
-api_key = os.environ.get("OPENROUTESERVICE_API_KEY")
-client = openrouteservice.Client(key=api_key)
-
 def getDistance(c1:list,c2:list):
     
 
