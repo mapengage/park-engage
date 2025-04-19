@@ -72,19 +72,23 @@ export default function Index() {
           transform: "translateX(-50%)", // Center horizontally
           height: isModalOpen ? "calc(100% - 20px)" : "50px", // Adjust height dynamically
           width: "90%", // Leave some gap on the sides
-          backgroundColor: "white", // Modal background color
+          backgroundColor: "rgba(255,255,255,0.8)", // Modal background color
+          color: "white",
           borderRadius: "10px", // Rounded corners
-          boxShadow: "0px -2px 10px rgba(0, 0, 0, 0.2)", // Add shadow for depth
+          boxShadow: "0px 10px 15px rgba(0, 0, 0, 0.2), 0px 4px 6px rgba(0, 0, 0, 0.1)", // 3D-like shadow
           zIndex: 1100, // Ensure it appears above the map
           boxSizing: "border-box",
           overflowY: isModalOpen ? "auto" : "hidden", // Allow scrolling when modal is open
           transition: "all 0.3s ease", // Smooth slide-up animation
-          border: "1px solid lightgray", // Border color
+          border: isModalOpen ? "1px solid lightgray" : "", // Border color
+          backdropFilter: isModalOpen ? "blur(10px)" : "none", // Add blur effect when modal is open
+          WebkitBackdropFilter: isModalOpen ? "blur(10px)" : "none", // Safari support
         }}
       >
         {/* Footer Section */}
         <div
           style={{
+            font: "BebasNeueBold, Arial, sans-serif", // Use a bold font for the footer
             height: "50px",
             backgroundColor: "rgba(0, 69, 37, 0.95)", // Footer background color
             display: "flex",
