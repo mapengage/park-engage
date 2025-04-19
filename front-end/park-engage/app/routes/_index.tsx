@@ -1,8 +1,17 @@
 import { useEffect, useState } from "react";
 import "leaflet/dist/leaflet.css";
 import locations from "~/data/locations.json"; // Import the JSON file
+import { json } from "@remix-run/node"; // or "@remix-run/cloudflare"
+import { useLoaderData } from "@remix-run/react";
+
+export const loader = () => {
+  return json({
+    serverEndpoint: process.env.SERVER_ENDPOINT, // Pass the variable to the client
+  });
+};
 
 export default function Index() {
+  const { serverEndpoint } = useLoaderData(); // Access the variable in the client
   const [MapComponents, setMapComponents] = useState<any>(null);
   const [selectedBuilding, setSelectedBuilding] = useState(null); // Track the selected building
   const [isModalOpen, setIsModalOpen] = useState(false); // Track modal visibility
@@ -39,7 +48,8 @@ export default function Index() {
 
     // Make a REST call to fetch parking data
     try {
-        const response = await fetch(window.SERVER_ENDPOINT, {
+      console.log("Calling ", serverEndpoint)
+      const response = await fetch(serverEndpoint, {
         method: "POST", // Use POST to send data
         headers: {
           "Content-Type": "application/json", // Specify JSON content type
