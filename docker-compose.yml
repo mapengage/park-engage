@@ -1,7 +1,7 @@
-version: "1"
+version: "3.8"
 services:
   frontend:
-    build: ./frontend/park-engage
+    build: ./front-end/park-engage
     ports:
       - "3000:5173"
     depends_on:
@@ -11,3 +11,5 @@ services:
     build: ./backend
     ports:
       - "5000:5000"
+    environment:
+      - OPENAI_API_KEY=${OPENAI_API_KEY}
