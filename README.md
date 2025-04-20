@@ -89,6 +89,10 @@ A Flask-based application that helps UNC Charlotte Students find the optimal par
    npm run dev
    ```
 
+   Add environment variables:
+   OPENAI_API_KEY
+   SERVER_ENDPOINT - http://localhost:5001/api/park (RECOMMENDED)
+
 ## Usage
 
 1. Open the application in your browser
