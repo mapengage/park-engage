@@ -5,7 +5,7 @@ Server Tasks:
     Get the GPS coordinates for the destination.
 
     Low Occupancy is 0-40%. Medium is 40-75%. High Occupancy (Try not to ever pick) is 85% - 100%
-    
+
     Determine the weather score:
 
         0 = good walking weather
@@ -51,4 +51,5 @@ This prevents picking garages that are likely full, even if close in distance.
 {"garage": the parking garage you choose,
 "weather": a number, 0, if the weather is walkable and 1 if it is raining, cold, windy, or uncomfortable.,
 "estimatedParkingTime": a number between 2-15 based on how full the parking garage is. ,
-"reasons": a list of 3 reasons why you chose this parking garage and not another parking garage.}
+"reasons": a list of 3 reasons why you chose this parking garage and not another parking garage. ,
+"estimatedPercentage": the estimated percentage the garage will be filled up when the student reaches. It should not be the same as the current percentage filled. Should be out of 1. For example, 20% would be 0.20. you will be provided with historical data and how much time the student will reach in. you must calculate the time that the student will reach and then use the data to figure out the estimated value, based on trends before. take your time and carefully examine the data before making a decision.}
