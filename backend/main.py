@@ -88,7 +88,7 @@ def askLLM(location:str, time):
 
                      If it is late (Past 5PM) no matter what you HAVE to choose the shortest walking distance that isnt filled up.
 
-                     The Top 3 Closest Garages are: {getTop3}
+                     The Top 3 Closest Garages are: {getTop3(timeToWalk)}
                      Here is the weather data. {getWeatherData()}. Here is the time: {time}"""
     print(prompt)
     client = OpenAI(
