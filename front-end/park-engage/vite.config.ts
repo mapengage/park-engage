@@ -21,4 +21,7 @@ export default defineConfig({
     }),
     tsconfigPaths(),
   ],
+  server: {
+    allowedHosts: ["ifshnd.tunnel.pyjam.as"], // Add the allowed host here
+  },
 });
