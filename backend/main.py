@@ -88,6 +88,9 @@ def askLLM(location:str, time):
 
                      However, only pick garages that are above 90% full IF all the alternatives are more than a 6 min difference in walking time!
                      Low Occupancy is 0-40%. Medium is 40-75%. High Occupancy (Try not to ever pick) is 85% - 100%
+                    
+                     
+                     99.99% of the time, you should pick from the Top 3 Closest!! Medium or Low availability is a lot better than a 15 min walk!! Do NOT pick CRI deck for anything except for Portal unless there are extenuating circumstances!
 
                      If it is late (Past 5PM) no matter what you HAVE to choose the shortest walking distance that isnt filled up.
 
