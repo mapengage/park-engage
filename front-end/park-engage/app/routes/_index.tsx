@@ -218,149 +218,201 @@ export default function Index() {
               height: "calc(100% - 50px)", // Subtract the height of the fixed header
             }}
           >
-            {/* Recommended Parking Deck Section */}
-            <h3
-              style={{
-                marginBottom: "10px",
-                fontStyle: "italic", // Italicize the text
-                fontFamily: "'Georgia', serif", // Use a fancy serif font
-                color: "#2c3e50", // Dark gray for a classy look
-              }}
-            >
-              Recommended Parking Deck:
-            </h3>
-            <button
-              onClick={() =>
-                window.open(
-                  `https://www.google.com/maps/search/?api=1&query=${parkingData?.readableName}`,
-                  "_blank"
-                )
-              }
-              style={{
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "center",
-                width: "100%",
-                padding: "15px",
-                backgroundColor: "#34A853", // Google Maps green
-                color: "#fff", // White text for contrast
-                fontSize: "20px",
-                fontWeight: "bold",
-                border: "2px solid #FFD700", // Light gold border
-                borderRadius: "10px", // Rounded corners
-                cursor: "pointer",
-                marginBottom: "20px",
-                boxShadow: "0px 4px 6px rgba(0, 0, 0, 0.1)", // Popped-out shadow effect
-                transition: "box-shadow 0.2s ease, background-color 0.2s ease", // Smooth hover and press effects
-              }}
-            >
-              {/* Navigation Icon */}
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                fill="white" // White fill for the icon
-                viewBox="0 0 24 24"
-                width="24px"
-                height="24px"
-                style={{ marginRight: "10px" }}
-              >
-                <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm.59 15.41L11 13H8v-2h3l1.59-4.41L17 12l-4.41 5.41z" />
-              </svg>
-              {parkingData?.readableName}
-            </button>
+            {loading ? (
+              <div style={{ textAlign: "center" }}>
+                {/* Spinner Animation */}
+                <style>
+                  {`
+                    @keyframes spin {
+                      0% {
+                        transform: rotate(0deg);
+                      }
+                      100% {
+                        transform: rotate(360deg);
+                      }
+                    }
+                  `}
+                </style>
+                <div
+                  style={{
+                    width: "40px",
+                    height: "40px",
+                    border: "4px solid #ccc",
+                    borderTop: "4px solid #007bff",
+                    borderRadius: "50%",
+                    animation: "spin 1s linear infinite",
+                    margin: "0 auto",
+                  }}
+                ></div>
+                <p style={{ marginTop: "10px", fontSize: "16px" }}>Computering...</p>
+              </div>
+            ) : (
+              <>
+                {/* Recommended Parking Deck Section */}
+                <h3
+                  style={{
+                    marginBottom: "10px",
+                    fontStyle: "italic", // Italicize the text
+                    fontFamily: "'Georgia', serif", // Use a fancy serif font
+                    color: "#2c3e50", // Dark gray for a classy look
+                  }}
+                >
+                  Recommended Parking Deck for <u>{selectedBuilding?.name}</u>:
+                </h3>
+                <button
+                  onClick={() =>
+                    window.open(
+                      `https://www.google.com/maps/search/?api=1&query=${parkingData?.readableName}`,
+                      "_blank"
+                    )
+                  }
+                  style={{
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "center",
+                    width: "100%",
+                    padding: "15px",
+                    backgroundColor: "#34A853", // Google Maps green
+                    color: "#fff", // White text for contrast
+                    fontSize: "20px",
+                    fontWeight: "bold",
+                    border: "2px solid #FFD700", // Light gold border
+                    borderRadius: "10px", // Rounded corners
+                    cursor: "pointer",
+                    marginBottom: "20px",
+                    boxShadow: "0px 4px 6px rgba(0, 0, 0, 0.1)", // Popped-out shadow effect
+                    transition: "box-shadow 0.2s ease, background-color 0.2s ease", // Smooth hover and press effects
+                  }}
+                >
+                  {/* Navigation Icon */}
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    fill="white" // White fill for the icon
+                    viewBox="0 0 24 24"
+                    width="24px"
+                    height="24px"
+                    style={{ marginRight: "10px" }}
+                  >
+                    <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm.59 15.41L11 13H8v-2h3l1.59-4.41L17 12l-4.41 5.41z" />
+                  </svg>
+                  {parkingData?.readableName}
+                </button>
 
-            {/* Table Section */}
-            <table
-              style={{
-                width: "100%",
-                borderCollapse: "collapse",
-                marginBottom: "20px",
-              }}
-            >
-              <thead>
-                <tr>
-                  <th
-                    style={{
-                      border: "1px solid #ddd",
-                      padding: "10px",
-                      textAlign: "center",
-                      backgroundColor: "#f8f9fa",
-                      fontWeight: "bold",
-                    }}
-                  >
-                    Est Parking Time
-                  </th>
-                  <th
-                    style={{
-                      border: "1px solid #ddd",
-                      padding: "10px",
-                      textAlign: "center",
-                      backgroundColor: "#f8f9fa",
-                      fontWeight: "bold",
-                    }}
-                  >
-                    Percent Filled
-                  </th>
-                  <th
-                    style={{
-                      border: "1px solid #ddd",
-                      padding: "10px",
-                      textAlign: "center",
-                      backgroundColor: "#f8f9fa",
-                      fontWeight: "bold",
-                    }}
-                  >
-                    Weather
-                  </th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr>
-                  <td
-                    style={{
-                      border: "1px solid #ddd",
-                      padding: "10px",
-                      textAlign: "center",
-                    }}
-                  >
-                    {parkingData?.estimatedParkingTime} min
-                  </td>
-                  <td
-                    style={{
-                      border: "1px solid #ddd",
-                      padding: "10px",
-                      textAlign: "center",
-                    }}
-                  >
-                    {(parkingData?.percentFilled * 100).toFixed(2)}%
-                  </td>
-                  <td
-                    style={{
-                      border: "1px solid #ddd",
-                      padding: "10px",
-                      textAlign: "center",
-                    }}
-                  >
-                    {parkingData?.weather === 0 ? "😊" : "☹️"}
-                  </td>
-                </tr>
-              </tbody>
-            </table>
+                {/* Table Section */}
+                <table
+                  style={{
+                    width: "100%",
+                    borderCollapse: "collapse",
+                    marginBottom: "20px",
+                  }}
+                >
+                  <thead>
+                    <tr>
+                      <th
+                        style={{
+                          border: "1px solid #ddd",
+                          padding: "10px",
+                          textAlign: "center",
+                          backgroundColor: "#f8f9fa",
+                          fontWeight: "bold",
+                        }}
+                      >
+                        Est Parking Time
+                      </th>
+                      <th
+                        style={{
+                          border: "1px solid #ddd",
+                          padding: "10px",
+                          textAlign: "center",
+                          backgroundColor: "#f8f9fa",
+                          fontWeight: "bold",
+                        }}
+                      >
+                        Percent Filled
+                      </th>
+                      <th
+                        style={{
+                          border: "1px solid #ddd",
+                          padding: "10px",
+                          textAlign: "center",
+                          backgroundColor: "#f8f9fa",
+                          fontWeight: "bold",
+                        }}
+                      >
+                        Percent Estimated
+                      </th>
+                      <th
+                        style={{
+                          border: "1px solid #ddd",
+                          padding: "10px",
+                          textAlign: "center",
+                          backgroundColor: "#f8f9fa",
+                          fontWeight: "bold",
+                        }}
+                      >
+                        Weather
+                      </th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td
+                        style={{
+                          border: "1px solid #ddd",
+                          padding: "10px",
+                          textAlign: "center",
+                        }}
+                      >
+                        {parkingData?.estimatedParkingTime} min
+                      </td>
+                      <td
+                        style={{
+                          border: "1px solid #ddd",
+                          padding: "10px",
+                          textAlign: "center",
+                        }}
+                      >
+                        {(parkingData?.percentFilled * 100).toFixed(2)}%
+                      </td>
+                      <td
+                        style={{
+                          border: "1px solid #ddd",
+                          padding: "10px",
+                          textAlign: "center",
+                        }}
+                      >
+                        {(parkingData?.percentEstimated * 100).toFixed(2)}%
+                      </td>
+                      <td
+                        style={{
+                          border: "1px solid #ddd",
+                          padding: "10px",
+                          textAlign: "center",
+                        }}
+                      >
+                        {parkingData?.weather === 0 ? "😊" : "☹️"}
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
 
-            {/* Reasons Section */}
-            <h3>Reasons:</h3>
-            <ul
-              style={{
-                listStyleType: "disc", // Use bullets
-                paddingLeft: "20px", // Indent the bullets
-                marginTop: "10px", // Add spacing above the list
-              }}
-            >
-              {parkingData?.reasons.map((reason, index) => (
-                <li key={index} style={{ marginBottom: "5px" }}>
-                  {reason}
-                </li>
-              ))}
-            </ul>
+                {/* Reasons Section */}
+                <h3>Reasons:</h3>
+                <ul
+                  style={{
+                    listStyleType: "disc", // Use bullets
+                    paddingLeft: "20px", // Indent the bullets
+                    marginTop: "10px", // Add spacing above the list
+                  }}
+                >
+                  {parkingData?.reasons.map((reason, index) => (
+                    <li key={index} style={{ marginBottom: "5px" }}>
+                      {reason}
+                    </li>
+                  ))}
+                </ul>
+              </>
+            )}
           </div>
         )}
       </div>
