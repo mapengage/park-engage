@@ -18,18 +18,19 @@ export default function Index() {
   const [parkingData, setParkingData] = useState(null); // Track parking data
   const [loading, setLoading] = useState(false); // Track loading state
   const [error, setError] = useState(false); // Track error state
-  const sampleResponse = {
-    estimatedParkingTime: 3,
-    garage: "ED1",
-    readableName: "East Deck 1",
-    percentFilled: 0.02,
-    reasons: [
-      "The parking deck is only 2% filled, allowing for a quick parking experience.",
-      "It is the closest available parking deck to the Student Union, minimizing walking distance.",
-      "The weather conditions are favorable, making the walk to class pleasant.",
-    ],
-    weather: 0, // 0 for smiley face, 1 for frown face
-  };
+  // const sampleResponse = {
+  //   estimatedParkingTime: 3,
+  //   garage: "ED1",
+  //   readableName: "East Deck 1",
+  //   percentFilled: 0.02,
+  //   percentEstimated: 0.05,
+  //   reasons: [
+  //     "The parking deck is only 2% filled, allowing for a quick parking experience.",
+  //     "It is the closest available parking deck to the Student Union, minimizing walking distance.",
+  //     "The weather conditions are favorable, making the walk to class pleasant.",
+  //   ],
+  //   weather: 0, // 0 for smiley face, 1 for frown face
+  // };
   useEffect(() => {
     // Dynamically import react-leaflet components on the client side
     import("react-leaflet").then((module) => {
@@ -63,23 +64,23 @@ export default function Index() {
 
     // Make a REST call to fetch parking data
     try {
-      setParkingData(sampleResponse)
+      // setParkingData(sampleResponse)
 
-      // console.log("Calling ", serverEndpoint);
-      // const response = await fetch(serverEndpoint, {
-      //   method: "POST", // Use POST to send data
-      //   headers: {
-      //     "Content-Type": "application/json", // Specify JSON content type
-      //   },
-      //   body: JSON.stringify(requestData), // Send the JSON block
-      // });
+      console.log("Calling ", serverEndpoint);
+      const response = await fetch(serverEndpoint, {
+        method: "POST", // Use POST to send data
+        headers: {
+          "Content-Type": "application/json", // Specify JSON content type
+        },
+        body: JSON.stringify(requestData), // Send the JSON block
+      });
 
-      // if (!response.ok) {
-      //   throw new Error("Server error");
-      // }
+      if (!response.ok) {
+        throw new Error("Server error");
+      }
 
-      // const data = await response.json();
-      // setParkingData(data); // Store the parking data
+      const data = await response.json();
+      setParkingData(data); // Store the parking data
     } catch (error) {
       console.error("Error fetching parking data:", error);
       setError(true); // Set error state
@@ -231,7 +232,7 @@ export default function Index() {
             <button
               onClick={() =>
                 window.open(
-                  `https://www.google.com/maps/search/?api=1&query=${sampleResponse.readableName}`,
+                  `https://www.google.com/maps/search/?api=1&query=${parkingData?.readableName}`,
                   "_blank"
                 )
               }
@@ -245,24 +246,12 @@ export default function Index() {
                 color: "#fff", // White text for contrast
                 fontSize: "20px",
                 fontWeight: "bold",
-                border: "rgba(129, 112, 50, 1.0)", // Light gold border
+                border: "2px solid #FFD700", // Light gold border
                 borderRadius: "10px", // Rounded corners
                 cursor: "pointer",
                 marginBottom: "20px",
                 boxShadow: "0px 4px 6px rgba(0, 0, 0, 0.1)", // Popped-out shadow effect
                 transition: "box-shadow 0.2s ease, background-color 0.2s ease", // Smooth hover and press effects
-              }}
-              onMouseOver={(e) => {
-                e.currentTarget.style.boxShadow = "0px 4px 10px rgba(0, 0, 0, 0.2)"; // Highlight effect
-              }}
-              onMouseOut={(e) => {
-                e.currentTarget.style.boxShadow = "0px 4px 6px rgba(0, 0, 0, 0.1)"; // Reset shadow
-              }}
-              onMouseDown={(e) => {
-                e.currentTarget.style.boxShadow = "inset 0px 4px 6px rgba(0, 0, 0, 0.2)"; // Dipped-in effect
-              }}
-              onMouseUp={(e) => {
-                e.currentTarget.style.boxShadow = "0px 4px 10px rgba(255, 215, 0, 0.5)"; // Reset to highlight
               }}
             >
               {/* Navigation Icon */}
@@ -276,7 +265,7 @@ export default function Index() {
               >
                 <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm.59 15.41L11 13H8v-2h3l1.59-4.41L17 12l-4.41 5.41z" />
               </svg>
-              {sampleResponse.readableName}
+              {parkingData?.readableName}
             </button>
 
             {/* Table Section */}
@@ -298,7 +287,7 @@ export default function Index() {
                       fontWeight: "bold",
                     }}
                   >
-                    Percent Filled
+                    Est Parking Time
                   </th>
                   <th
                     style={{
@@ -309,7 +298,7 @@ export default function Index() {
                       fontWeight: "bold",
                     }}
                   >
-                    Est Parking Time
+                    Percent Filled
                   </th>
                   <th
                     style={{
@@ -322,12 +311,10 @@ export default function Index() {
                   >
                     Weather
                   </th>
-    
                 </tr>
               </thead>
               <tbody>
                 <tr>
-
                   <td
                     style={{
                       border: "1px solid #ddd",
@@ -335,7 +322,7 @@ export default function Index() {
                       textAlign: "center",
                     }}
                   >
-                    {(sampleResponse.percentFilled * 100).toFixed(2)}%
+                    {parkingData?.estimatedParkingTime} min
                   </td>
                   <td
                     style={{
@@ -344,7 +331,7 @@ export default function Index() {
                       textAlign: "center",
                     }}
                   >
-                    {sampleResponse.estimatedParkingTime} min
+                    {(parkingData?.percentFilled * 100).toFixed(2)}%
                   </td>
                   <td
                     style={{
@@ -353,9 +340,8 @@ export default function Index() {
                       textAlign: "center",
                     }}
                   >
-                    {sampleResponse.weather === 0 ? "😊" : "☹️"}
+                    {parkingData?.weather === 0 ? "😊" : "☹️"}
                   </td>
-                  
                 </tr>
               </tbody>
             </table>
@@ -369,7 +355,7 @@ export default function Index() {
                 marginTop: "10px", // Add spacing above the list
               }}
             >
-              {sampleResponse.reasons.map((reason, index) => (
+              {parkingData?.reasons.map((reason, index) => (
                 <li key={index} style={{ marginBottom: "5px" }}>
                   {reason}
                 </li>
