@@ -8,13 +8,13 @@ import haversine
 app = Flask(__name__)
 CORS(app)
 
-def getDistance(c1:list,c2:list):
+def getTime(c1:list,c2:list):
     
 
     # Coordinates are in [longitude, latitude] format!
     start_coords = (float(c1[0]), float(c1[1])) 
     end_coords   = (float(c2[0]), float(c2[1])) 
-    return haversine.haversine(start_coords, end_coords, unit=haversine.Unit.MILES)
+    return 2.2(haversine.haversine(start_coords, end_coords, unit=haversine.Unit.MILES))
 
 def getWeatherData():
     response = requests.get("https://cdn.weatherstem.com/dashboard/data/dynamic/model/mecklenburg/uncc/latest.json")
@@ -68,7 +68,7 @@ def askLLM(location:str, time):
             "name": v["name"],
             "filledPercent": 1 - getNowPercent(v["name"])
         }
-        timeToWalk[v["name"]] = getDistance([v["latitude"], v["longitude"]], [lat, long])
+        timeToWalk[v["name"]] = getTime([v["latitude"], v["longitude"]], [lat, long])
         print(timeToWalk)
 
     prompt = prompt + f""" Here are all the locations of the parking garages. {parkingLocations} . Here are how full they are {availabilityForParkingGarage}.
@@ -76,7 +76,7 @@ def askLLM(location:str, time):
                      The percentage out of 100 is the number in here * 100. 
                      Make sure to mention this number in the reasons. 
                      The name of the building where the student's class is located is {location}
-                     Here is the distance in miles to the parking garage from the class. try to minimize. THIS IS VERY IMPORTANT. {timeToWalk}
+                     Here is the estimated time that it takes to walk to the building. try to minimize as much as possible THIS IS VERY IMPORTANT. However, do not mention these numbers in the results. Just talk relatively what is close to each otther. {timeToWalk}
                      Here is the weather data. {getWeatherData()}. Here is the time: {time}"""
     print(prompt)
     client = OpenAI(
