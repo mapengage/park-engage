@@ -14,7 +14,7 @@ def getTime(c1:list,c2:list):
     # Coordinates are in [longitude, latitude] format!
     start_coords = (float(c1[0]), float(c1[1])) 
     end_coords   = (float(c2[0]), float(c2[1])) 
-    return 2.2(haversine.haversine(start_coords, end_coords, unit=haversine.Unit.MILES))
+    return 2.2 * (haversine.haversine(start_coords, end_coords, unit=haversine.Unit.MILES))
 
 def getWeatherData():
     response = requests.get("https://cdn.weatherstem.com/dashboard/data/dynamic/model/mecklenburg/uncc/latest.json")
