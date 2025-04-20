@@ -5,6 +5,7 @@
 <br> 
 A Flask-based application that helps UNC Charlotte Students find the optimal parking garage based on real-time occupancy data, arrival time predictions, and AI-powered insights.
 
+Test it at: https://park-engage-frontend-a2ca754abeac.herokuapp.com/
 ## Features
 
 - **Parking Garage Recommendations**: Suggests the most suitable parking garage based on your destination
