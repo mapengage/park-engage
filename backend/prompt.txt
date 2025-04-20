@@ -38,7 +38,7 @@ This prevents picking garages that are likely full, even if close in distance.
 
     If there is a garage that is closer or almost as close as the garage you chose, you must justify your decision in one of the reasons. Please explain why. Even if it is closer but the other one is somewhat close to the building..
     If it is the closest to the garage, specify that in the reason. If it is not, justify it.
-    Later in the day, past 5pm always go for the shortest distance as long as the parking garage is not more than 80% filled up.
+    Later in the day, past 5pm always go for the shortest distance as long as the parking garage is not more than 80% filled up. You HAVE to go for the shortest distance. Do not try to justify picking another one. You must.
     Return a JSON response in this format:
 {"garage": the parking garage you choose,
 "weather": a number, 0, if the weather is walkable and 1 if it is raining, cold, windy, or uncomfortable.,
