@@ -21,4 +21,12 @@ export default defineConfig({
     }),
     tsconfigPaths(),
   ],
+  server: {
+    port: Number(process.env.PORT) || 5173, // Use Heroku's port or fallback to 5173 for local dev
+    allowedHosts: [
+      "park-engage-frontend-a2ca754abeac.herokuapp.com", // Allowed host
+      "localhost", // Allow localhost for development
+      ".herokuapp.com", // Allow Heroku's generic domain
+    ],
+  },
 });
