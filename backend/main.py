@@ -44,6 +44,10 @@ def getNowPercent(code: str):
         else:
             return 0  # Return 0 if the request fails
  
+def getTop3(timeToWalk):
+    sorted_times = sorted(timeToWalk.items(), key=lambda x: x[1])
+    return [name for name, time in sorted_times[:3]]
+
 def askLLM(location:str, time):
     prompt = ""
     locations = {}
@@ -77,6 +81,14 @@ def askLLM(location:str, time):
                      Make sure to mention this number in the reasons. 
                      The name of the building where the student's class is located is {location}
                      Here is the estimated time that it takes to walk to the building (in minutes!!). try to minimize as much as possible THIS IS VERY IMPORTANT. However, do not mention these numbers in the results. Just talk relatively what is close to each otther. {timeToWalk}
+                     If possible, you must choose the building with the least time to get to!!!!
+
+                     Walking Time to Class is the most important!!!!!!!!!!!
+                     Please prioritze walking time!!!
+
+                     If it is late (Past 5PM) no matter what you HAVE to choose the shortest walking distance that isnt filled up.
+
+                     The Top 3 Closest Garages are: {getTop3}
                      Here is the weather data. {getWeatherData()}. Here is the time: {time}"""
     print(prompt)
     client = OpenAI(
