@@ -16,6 +16,10 @@ A Flask-based application that helps UNC Charlotte Students find the optimal par
 
 ## Screenshots
 ![image](https://github.com/user-attachments/assets/8a0bd269-0255-4e3b-99c4-30033338d6ec)
+![image](https://github.com/user-attachments/assets/89205ac4-faab-4df8-bdf1-d261addc1893)
+![image](https://github.com/user-attachments/assets/e47efe6e-6847-4ef2-ac6e-8da676b9349c)
+
+
 
 ## Technology Stack
 
@@ -84,6 +88,10 @@ A Flask-based application that helps UNC Charlotte Students find the optimal par
    ```
    npm run dev
    ```
+
+   Add environment variables:
+   OPENAI_API_KEY
+   SERVER_ENDPOINT - http://localhost:5001/api/park (RECOMMENDED)
 
 ## Usage
 
