@@ -86,6 +86,8 @@ def askLLM(location:str, time):
                      Walking Time to Class is the most important!!!!!!!!!!!
                      Please prioritze walking time!!!
 
+                     However, only pick garages that are above 90% full IF all the alternatives are more than a 6 min difference in walking time!
+
                      If it is late (Past 5PM) no matter what you HAVE to choose the shortest walking distance that isnt filled up.
 
                      The Top 3 Closest Garages are: {getTop3(timeToWalk)}
