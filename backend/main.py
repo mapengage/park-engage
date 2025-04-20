@@ -46,7 +46,7 @@ def getNowPercent(code: str):
  
 def getTop3(timeToWalk):
     sorted_times = sorted(timeToWalk.items(), key=lambda x: x[1])
-    return [name for name, time in sorted_times[:3]]
+    return [{"name": name, "time": time} for name, time in sorted_times[:3]]
 
 def askLLM(location:str, time):
     prompt = ""
