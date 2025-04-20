@@ -78,6 +78,8 @@ def askLLM(location:str, time):
     prompt = prompt + f""" Here are all the locations of the parking garages. {parkingLocations} . Here are how full they are {availabilityForParkingGarage}.
                      The number represents the decimal place of how much they are full.
                      The percentage out of 100 is the number in here * 100. 
+                     Low Occupancy is 0-40%. Medium is 40-75%. High Occupancy (Try not to ever pick) is 85% - 100%
+
                      Make sure to mention this number in the reasons. 
                      The name of the building where the student's class is located is {location}
                      Here is the estimated time that it takes to walk to the building (in minutes!!). try to minimize as much as possible THIS IS VERY IMPORTANT. However, do not mention these numbers in the results. Just talk relatively what is close to each otther. {timeToWalk}
@@ -95,7 +97,8 @@ def askLLM(location:str, time):
                      If it is late (Past 5PM) no matter what you HAVE to choose the shortest walking distance that isnt filled up.
 
                      The Top 3 Closest Garages are: {getTop3(timeToWalk)}
-                     Here is the weather data. {getWeatherData()}. Here is the time: {time}"""
+                     Here is the weather data. {getWeatherData()}. Here is the time: {time}
+                     Take your time. Double (or even triple check) your answer. Do not rush it. Always pick what is the most logical and prioritizing the comfort of the student. Double check your answer to see if it makes sense."""
     print(prompt)
     client = OpenAI(
         api_key=os.environ.get("OPENAI_API_KEY")

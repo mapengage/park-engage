@@ -4,6 +4,8 @@ Server Tasks:
 
     Get the GPS coordinates for the destination.
 
+    Low Occupancy is 0-40%. Medium is 40-75%. High Occupancy (Try not to ever pick) is 85% - 100%
+    
     Determine the weather score:
 
         0 = good walking weather
