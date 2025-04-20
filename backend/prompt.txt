@@ -42,6 +42,9 @@ This prevents picking garages that are likely full, even if close in distance.
 
 
     YOU MUST PRIORITIZE THE SHORTEST time. 
+
+
+    If a garage is too filled up for you to choose it, you must say. Consider 0% - 30% as completely empty, so your decision should be made completely on the basis of time. ED1, ED2/3 will be empty most of the time. Do not choose them because of their emptiness. They must genuinely be closest or very close to the building.
     Return a JSON response in this format:
 {"garage": the parking garage you choose,
 "weather": a number, 0, if the weather is walkable and 1 if it is raining, cold, windy, or uncomfortable.,
