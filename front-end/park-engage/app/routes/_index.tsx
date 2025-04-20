@@ -56,10 +56,20 @@ export default function Index() {
     setLoading(true); // Show the loading spinner
     setError(false); // Reset error state
 
+    const position = await new Promise<GeolocationPosition>((resolve, reject) => {
+      navigator.geolocation.getCurrentPosition(resolve, reject);
+    });
+
+    const userLatitude = position.coords.latitude;
+    const userLongitude = position.coords.longitude;
+
+
     // Create the JSON block to send to the server
     const requestData = {
       location: building.name, // Use the building's name as the location
       time: new Date().toISOString(), // Use the current time in ISO format
+      latitude: userLatitude, // Use the building's latitude
+      longitude: userLongitude, // Use the building's longitude
     };
 
     // Make a REST call to fetch parking data
