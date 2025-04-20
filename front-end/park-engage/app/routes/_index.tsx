@@ -352,7 +352,7 @@ export default function Index() {
                           fontWeight: "bold",
                         }}
                       >
-                        Percent Filled
+                        Percent Filled Now
                       </th>
                       <th
                         style={{
@@ -363,7 +363,7 @@ export default function Index() {
                           fontWeight: "bold",
                         }}
                       >
-                        Percent Estimated
+                        Arrival Percentage (AI Est.)
                       </th>
                       <th
                         style={{
@@ -405,7 +405,7 @@ export default function Index() {
                           textAlign: "center",
                         }}
                       >
-                        {(parkingData?.percentEstimated * 100).toFixed(2)}%
+                        {(parkingData?.estimatedPercentage * 100).toFixed(2)}%
                       </td>
                       <td
                         style={{
