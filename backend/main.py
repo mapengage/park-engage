@@ -9,12 +9,20 @@ app = Flask(__name__)
 CORS(app)
 
 def getTime(c1:list,c2:list):
-    
-
     # Coordinates are in [longitude, latitude] format!
     start_coords = (float(c1[0]), float(c1[1])) 
     end_coords   = (float(c2[0]), float(c2[1])) 
     return ((haversine.haversine(start_coords, end_coords, unit=haversine.Unit.MILES))/2.2) * 60
+
+def getTimeData():
+    parking_data = []
+    file_path = "./parking_data_20min.csv"
+    with open(file_path, "r") as file:
+        headers = file.readline().strip().split(",")  # Read the header row
+        for line in file:
+            values = line.strip().split(",")
+            parking_data.append(dict(zip(headers, values)))
+
 
 def getWeatherData():
     response = requests.get("https://cdn.weatherstem.com/dashboard/data/dynamic/model/mecklenburg/uncc/latest.json")
@@ -48,7 +56,7 @@ def getTop3(timeToWalk):
     sorted_times = sorted(timeToWalk.items(), key=lambda x: x[1])
     return [{"name": name, "time": time} for name, time in sorted_times[:3]]
 
-def askLLM(location:str, time):
+def askLLM(location:str, time, studentLocation):
     prompt = ""
     locations = {}
     with open("prompt.txt", "r") as file:
@@ -75,9 +83,16 @@ def askLLM(location:str, time):
         timeToWalk[v["name"]] = getTime([v["latitude"], v["longitude"]], [lat, long])
         print(timeToWalk)
 
+    timeData = getTimeData()
+    start_coords = studentLocation
+    end_coords   = (lat, long)
+    timeToGarage = ((haversine.haversine(start_coords, end_coords, unit=haversine.Unit.MILES))/15) * 60
+
     prompt = prompt + f""" Here are all the locations of the parking garages. {parkingLocations} . Here are how full they are {availabilityForParkingGarage}.
                      The number represents the decimal place of how much they are full.
                      The percentage out of 100 is the number in here * 100. 
+                     Low Occupancy is 0-40%. Medium is 40-75%. High Occupancy (Try not to ever pick) is 85% - 100%
+
                      Make sure to mention this number in the reasons. 
                      The name of the building where the student's class is located is {location}
                      Here is the estimated time that it takes to walk to the building (in minutes!!). try to minimize as much as possible THIS IS VERY IMPORTANT. However, do not mention these numbers in the results. Just talk relatively what is close to each otther. {timeToWalk}
@@ -95,7 +110,12 @@ def askLLM(location:str, time):
                      If it is late (Past 5PM) no matter what you HAVE to choose the shortest walking distance that isnt filled up.
 
                      The Top 3 Closest Garages are: {getTop3(timeToWalk)}
-                     Here is the weather data. {getWeatherData()}. Here is the time: {time}"""
+                     Here is the weather data. {getWeatherData()}. Here is the time: {time}
+
+                     Here is the historical data. The number represents how EMPTY it is. You must return how FULL it is. Take in account the day of the week.
+                     {timeData}
+                     The time for the student to get to the garage is {timeToGarage}. The time when the student gets  to the garage will be the timeToGarage + the time it currently is. calculate that value and make your decision)
+                     Take your time. Double (or even triple check) your answer. Do not rush it. Always pick what is the most logical and prioritizing the comfort of the student. Double check your answer to see if it makes sense."""
     print(prompt)
     client = OpenAI(
         api_key=os.environ.get("OPENAI_API_KEY")
@@ -142,7 +162,9 @@ def testData():
 def parkData():
     location = request.json["location"]
     time = request.json["time"]
-    llmResponse = askLLM(location,time)
+    latitude = request.json["latitude"]
+    longitude = request.json["longitude"]
+    llmResponse = askLLM(location,time, (latitude, longitude))
     
     namesToReadableNames = {
         "CD VS": "Cone Deck",
@@ -157,7 +179,6 @@ def parkData():
     }
     
     llmResponse["readableName"] = namesToReadableNames[llmResponse["garage"]]
-    llmResponse["percentEstimated"] = 0.5
     return jsonify(llmResponse)
 
     
