@@ -180,14 +180,15 @@ export default function Index() {
           border: "1px solid lightgray", // Border color
         }}
       >
-        {/* Footer Section (Fixed Header) */}
+        {/* Footer Section */}
         <div
           style={{
             height: "50px",
             backgroundColor: "rgba(0, 69, 37, 0.95)", // Footer background color
             display: "flex",
-            alignItems: "center",
-            justifyContent: "center", // Center the footer text
+            alignItems: "center", // Center content vertically
+            justifyContent: "space-between", // Space out logo, text, and close button
+            padding: "0 15px", // Add padding for spacing
             borderColor: "rgba(129, 112, 50, 1.0)",
             borderBottom: "1px solid lightgray", // Add a border to separate the header
             color: "#fff", // Ensure text is readable
@@ -197,23 +198,36 @@ export default function Index() {
             zIndex: 1200, // Ensure it stays above the scrollable content
           }}
         >
-          <p style={{ margin: 0, fontSize: "16px" }}>Park Engage @ UNCC</p>
+          {/* Logo */}
+          <img
+            src="/logo.png" // Path to the logo file in the public directory
+            alt="Logo"
+            hidden={!isModalOpen}
+            style={{
+              height: "40px", // Adjust the height of the logo
+              width: "auto", // Maintain aspect ratio
+              borderRadius: "50%", // Make the logo circular
+              border: "2px solid white", // Add a white border around the logo
+            }}
+          />
+          {/* Footer Text */}
+          <p style={{ margin: 0, fontSize: "16px", fontWeight: "bold", textAlign: "center", flex: 1 }}>
+            Park Engage @ UNCC
+          </p>
+          {/* Close Button */}
           {isModalOpen && (
             <button
               onClick={closeModal}
               style={{
-                position: "absolute",
-                top: "50%",
-                right: "15px",
-                transform: "translateY(-50%)", // Center vertically
                 background: "transparent",
                 border: "none",
                 color: "#fff", // White close button
                 fontSize: "20px",
-                fontFamily: "Arial, sans-serif", // Use Arial font
                 cursor: "pointer",
+                fontFamily: "Arial, sans-serif", // Use a sans-serif font for the close button
               }}
-            >✖
+            >
+              ✖
             </button>
           )}
         </div>
